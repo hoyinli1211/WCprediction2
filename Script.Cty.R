@@ -1,0 +1,8 @@
+library(stringr)
+url.cty <- 'https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv'
+df.cty <- read.csv(url(url.cty))
+#str(df.cty)
+df.cty2 <- df.cty[,c('official_name_en','CLDR.display.name','ISO3166.1.Alpha.2','ISO3166.1.Alpha.3','ISO3166.1.numeric','Continent','Dial','Region.Code','Region.Name')]
+colnames(df.cty2) <- c('cty','city','cty.cd2','cty.cd3','cty.cdInt','continent','dial','region.cd','region')
+df.cty2$cty.cdInt <- str_pad(df.cty2$cty.cdInt,3,pad="0")
+View(df.cty2)
