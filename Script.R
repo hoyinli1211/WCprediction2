@@ -5,8 +5,8 @@ library(ggplot2)
 library(gridExtra)
 
 #function import
-# url.function <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/function.R'
-# source(url.function)
+url.function <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/function.R'
+source(url.function)
 
 ######################################
 #Data import and manipulation
