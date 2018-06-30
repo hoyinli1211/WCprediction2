@@ -8,17 +8,26 @@ regionRank <- function(v.1,v.2) {
   
 }
 
-regionRegion <- function(v.1,v.2) {
+regionString <- function(v.1.region,v.2.region,v.1.score,v.2.score,ind) {
   
-  v.output=''
+  v.region=''
+  v.score=0
   rank1 <- regionRank(v.1,v.2)
   
   if (v.1==v.2 | rank1==1) {
-    v.output <- paste(v.1,v.2,'-')
+    v.region <- paste(v.1,v.2,'-')
+    v.score <- (v.1.score-v.2.score)
   }
   else {
-   v.output <- paste(v.2,v.1,'-') 
+   v.region <- paste(v.2,v.1,'-') 
+   v.score <- (v.2.score-v.1.score)
   }
   
-  return(v.output)
+  if (ind==1) {
+    return(v.output)
+  }
+  else {
+    return(v.score)
+  }
 }
+
