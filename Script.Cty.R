@@ -9,7 +9,8 @@ df.cty2 <- df.cty2 %>%
                    cty=ifelse(cty=='United Kingdom of Great Britain and Northern Ireland','England',
                               ifelse(cty=='Russian Federation','Russia',
                                      ifelse(cty=='Iran (Islamic Republic of)','Iran',
-                                            ifelse(cty=='Czechia','Czech Republic',cty)))),
+                                            ifelse(cty=='Czechia','Czech Republic',
+                                                   ifelse(cty=="Côte d'Ivoire",'Ivory Coast',cty))))),
                    region=as.character(region)
                    )
 
