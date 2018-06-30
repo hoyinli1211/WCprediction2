@@ -18,14 +18,30 @@ df <- df %>%
                score.max=pmax(home_score,away_score),
                score.min=pmin(home_score,away_score),
                score=paste0(score.max,'-',score.min),
-               score.diff=abs(score.max-score.min)
+               score.diff=(home_score-away_score),
+               score.diff.abs=abs(score.max-score.min),
+               home_team=ifelse(home_team == 'Korea Republic' | home_team== 'Korea DPR','Republic of Korea',
+                                ifelse(home_team=='USA','United States of America',
+                                       ifelse(home_team=='Republic of Korea',Korea,home_team))),
+               away_team=ifelse(away_team == 'Korea Republic' | away_team== 'Korea DPR','Republic of Korea',
+                                ifelse(away_team=='USA','United States of America',
+                                       ifelse(away_team=='Republic of Korea',Korea,away_team)))               
                ) %>%
         filter(date > '1994-07-17')
-# url.cty <- "https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/Script.Cty.R"
-# source(url.cty)
+url.cty <- "https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/Script.Cty.R"
+source(url.cty)
 
+#Region of each team
 df <- df %>%
-        left_join(df.cty2[,c(1,9)], by=c('home_team'='cty'))
+        left_join(df.cty2[,c(1,9)], by=c('home_team'='cty')) 
+colnames(df)[15] <- 'home.region'
+df <- df %>%
+        left_join(df.cty2[,c(1,9)], by=c('away_team'='cty'))
+colnames(df)[16] <- 'away.region'
+df <- df %>%
+        mutate(home.region=ifelse(home_team=='Scotland','Europe',home.region),
+               away.region=ifelse(away_team=='Scotland','Europe',away.region))
+
 
 #stage of world cup
 df.wc <- df %>% 
