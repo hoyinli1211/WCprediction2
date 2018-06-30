@@ -1,9 +1,12 @@
-
+#library
 library(dplyr)
 library(lubirate)
 library(ggplot2)
 library(gridExtra)
 
+#function import
+# url.function <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/function.R'
+# source(url.function)
 
 ######################################
 #Data import and manipulation
@@ -34,20 +37,22 @@ source(url.cty)
 #Region of each team
 df <- df %>%
         left_join(df.cty2[,c(1,9)], by=c('home_team'='cty')) 
-colnames(df)[15] <- 'home.region'
+colnames(df)[16] <- 'home.region'
 df <- df %>%
         left_join(df.cty2[,c(1,9)], by=c('away_team'='cty'))
-colnames(df)[16] <- 'away.region'
+colnames(df)[17] <- 'away.region'
 df <- df %>%
         mutate(home.region=ifelse(home_team=='Scotland','Europe',home.region),
-               away.region=ifelse(away_team=='Scotland','Europe',away.region))
-
+               away.region=ifelse(away_team=='Scotland','Europe',away.region),
+              )
 
 #stage of world cup
 df.wc <- df %>% 
           filter(tournament=='FIFA World Cup') %>%
           group_by(year) %>% 
-          mutate(id = row_number())
+          mutate(id = row_number())  %>%
+          rowwise() %>%
+          mutate(region.str=regionString(home.region,away.region,home_score,away_score,0))
 
 v.id <- c(1:64)
 v.stage1 <- c(rep('Group stage 1',12),rep('Group stage 2',12),rep('Group stage 3',12),rep('Group stage 4',12),rep('Round of 16',8),rep('Quarter-finals',4),rep('Semi-finals',2),'Third place play off','Final')
