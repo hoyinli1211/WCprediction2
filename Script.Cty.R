@@ -7,7 +7,8 @@ colnames(df.cty2) <- c('cty','city','cty.cd2','cty.cd3','cty.cdInt','continent',
 df.cty2 <- df.cty2 %>%
             mutate(cty.cdInt = str_pad(df.cty2$cty.cdInt,3,pad="0"),
                    cty=ifelse(cty=='United Kingdom of Great Britain and Northern Ireland','England',
-                              ifelse(cty=='Russian Federation','Russia',cty)),
+                              ifelse(cty=='Russian Federation','Russia',
+                                     ifelse(cty=='Iran (Islamic Republic of)','Iran',cty))),
                    region=as.character(region)
                    )
 
