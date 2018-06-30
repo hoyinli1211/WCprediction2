@@ -4,6 +4,8 @@ library(lubirdate)
 library(ggplot2)
 library(gridExtra)
 
+rm(list=ls())
+
 #function import
 url.function <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/function.R'
 source(url.function)
@@ -29,8 +31,9 @@ df <- df %>%
                away_team=ifelse(away_team == 'Korea Republic' | away_team== 'Korea DPR','Republic of Korea',
                                 ifelse(away_team=='USA','United States of America',
                                        ifelse(away_team=='Republic of Korea',Korea,away_team)))               
-               ) %>%
-        filter(date > '1994-07-17')
+        ) %>%
+        filter(date > '1994-07-17')    # as this is last of of 1994 world cup
+
 url.cty <- "https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/Script.Cty.R"
 source(url.cty)
 
@@ -44,7 +47,7 @@ colnames(df)[17] <- 'away.region'
 df <- df %>%
         mutate(home.region=ifelse(home_team=='Scotland','Europe',home.region),
                away.region=ifelse(away_team=='Scotland','Europe',away.region),
-              )
+        )
 
 #stage of world cup
 df.wc <- df %>% 
@@ -52,7 +55,8 @@ df.wc <- df %>%
           group_by(year) %>% 
           mutate(id = row_number())  %>%
           rowwise() %>%
-          mutate(region.str=regionString(home.region,away.region,home_score,away_score,0))
+          mutate(region.str=regionString(home.region,away.region,home_score,away_score,0),
+                 region.score.diff=regionString(home.region,away.region,home_score,away_score,1))
 
 v.id <- c(1:64)
 v.stage1 <- c(rep('Group stage 1',12),rep('Group stage 2',12),rep('Group stage 3',12),rep('Group stage 4',12),rep('Round of 16',8),rep('Quarter-finals',4),rep('Semi-finals',2),'Third place play off','Final')
@@ -66,18 +70,24 @@ df.wc <- df.wc %>%
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
           geom_count() +
           scale_size_area(max_size=5) +
-          scale_y_discrete(name='score.max',limits=seq(0,max(df.wc$score.max)+1,1)) +
+          scale_y_discrete(name='score.max',limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
           labs(title='Score distribution of FIFA World Cup \n 1998-2014')
 
 plot2 <- ggplot(df.wc, aes(x=score.diff)) + 
           geom_bar(stat='count', width=1,position='dodge') +
-          scale_x_discrete(limits=seq(0,max(df.wc$score.max),1)) +
+          scale_x_discrete(limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
           labs(title='Score difference distribution of FIFA World Cup \n 1998-2014')
 
 plot3 <- ggplot(df.wc, aes(x=score.diff,fill=stage2)) + 
           geom_bar(stat='count', width=1,position='dodge') +
-          scale_x_discrete(limits=seq(0,max(df.wc$score.max),1)) +
+          scale_x_discrete(limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
           labs(title='Score difference distribution of FIFA World Cup \n by stage type 1998-2014')
 
 
-grid.arrange(plot1,plot2, plot3,nrow=2,ncol=2)
+plot4 <- ggplot(df.wc, aes(x=reorder(region.str,region.score.diff,mean), y=region.score.diff)) +
+          geom_boxplot() +
+          labs(title='Score difference distribution of FIFA World Cup \n by region 1998-2014') +
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+grid.arrange(plot1,plot2, plot3, plot4,nrow=2,ncol=2)
+
