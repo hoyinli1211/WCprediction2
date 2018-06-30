@@ -9,12 +9,12 @@ regionString <- function(v.1.region,v.2.region,v.1.score,v.2.score,ind) {
   rank1 <- rank(c(v.1.region,v.2.region))[1]
   
   if (v.1.region==v.2.region | rank1==1) {
-    v.region <- paste(v.1.region,v.2.region,'-')
+    v.region <- paste(c(v.1.region,v.2.region),collapse='-')
     v.score <- (v.1.score-v.2.score)
   }
   else {
-   v.region <- paste(v.2.region,v.1.region,'-') 
-   v.score <- (v.2.score-v.1.score)
+    v.region <- paste(c(v.2.region,v.1.region),collapse='-') 
+    v.score <- (v.2.score-v.1.score)
   }
   
   if (ind==1) {
@@ -24,4 +24,3 @@ regionString <- function(v.1.region,v.2.region,v.1.score,v.2.score,ind) {
     return(v.score)
   }
 }
-
