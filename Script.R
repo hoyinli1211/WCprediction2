@@ -59,12 +59,23 @@ df.wc <- df %>%
                  region.score.diff=regionString(home.region,away.region,home_score,away_score,1))
 
 v.id <- c(1:64)
-v.stage1 <- c(rep('Group stage 1',12),rep('Group stage 2',12),rep('Group stage 3',12),rep('Group stage 4',12),rep('Round of 16',8),rep('Quarter-finals',4),rep('Semi-finals',2),'Third place play off','Final')
+v.stage1 <- c(rep('Group stage 1',16),rep('Group stage 2',16),rep('Group stage 3',16),rep('Round of 16',8),rep('Quarter-finals',4),rep('Semi-finals',2),'Third place play off','Final')
 v.stage2 <- c(rep('Group stage',48),rep('Knockout stage',16))
 df.stage <- data.frame(id=v.id,stage1=v.stage1, stage2=v.stage2)
 
 df.wc <- df.wc %>%
           left_join(df.stage,by='id')
+
+df.wc <- data.frame(df.wc)
+
+df.wc.team.1 <- df.wc %>%
+                filter(stage1=='Group stage 1') %>%
+                select(year, team=home_team)
+df.wc.team.2 <- df.wc %>%
+                  filter(stage1=='Group stage 1') %>%
+                  select(year, team=away_team)
+df.wc.team <- df.wc.team.1 %>%
+                bind_rows(df.wc.team.2)
 
 #data visualization- score distribution
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
