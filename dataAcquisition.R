@@ -54,7 +54,9 @@ df.fifa.ranking <- df.fifa.ranking %>%
                                                        ifelse(team=='China PR','China',
                                                               ifelse(team=='Korea Republic','Republic of Korea',
                                                                      ifelse(team=='Republic of Ireland','Ireland',
-                                                                          ifelse(team=='USA','United States of America',team)
+                                                                          ifelse(team=='USA','United States of America',
+                                                                                 ifelse(team=='Serbia and Montenegro','Serbia,team)
+                                                                          )
                                                                      )
                                                               )
                                                        )
