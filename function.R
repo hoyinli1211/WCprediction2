@@ -48,3 +48,23 @@ wcSummaryByYear <- function(v.year, v.team, v.var) {
   return(v.result)
   
 }
+
+df.trainExtraction <- function (v.year) {
+  
+  v.year <- as.character(v.year)
+  v.strat.date <- df.wc.timeframe %>%
+                    filter(year==v.year) %>%
+                    pull(start.date.train)
+  v.end.date <- df.wc.timeframe %>%
+                  filter(year==v.year) %>%
+                  pull(end.date.train)
+  
+  v.team <- df.wc.team %>%
+              filter(year==v.year) %>%
+              pull(team)
+  
+  df <- df.wc %>%
+          filter(home_team %in% v.team | away_team %in% v.team, year==v.year)
+  
+  return(df)
+}
