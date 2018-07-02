@@ -63,8 +63,9 @@ df.trainExtraction <- function (v.year) {
               filter(year==v.year) %>%
               pull(team)
   
-  df <- df.wc %>%
-          filter(home_team %in% v.team | away_team %in% v.team, year==v.year)
+  df.result <- df %>%
+                filter(home_team %in% v.team | away_team %in% v.team, year==v.year)
   
-  return(df)
+  return(df.result)
 }
+
