@@ -45,5 +45,5 @@ for (i in 1:dim(df.wc.timeframe)[1]) {
 }
 
 df.fifa.ranking <- df.fifa.ranking %>%
-                    mutate(team=ifelse(team == 'Korea Republic' ,'Republic of Korea',team)
+                    mutate(team=ifelse(team == 'Korea Republic' ,'Republic of Korea',team))
                            
