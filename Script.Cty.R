@@ -12,7 +12,7 @@ df.cty2 <- df.cty2 %>%
                                   ifelse(cty=='Czechia','Czech Republic',
                                          ifelse(cty=="Côte d'Ivoire",'Ivory Coast',
                                                 ifelse(cty=='Bosnia and Herzegovina','Bosnia-Herzegovina',
-                                                       ifelse(cty='China PR','China',cty)
+                                                       ifelse(cty=='China PR','China',cty)
                                                 )
                                          )
                                   )
