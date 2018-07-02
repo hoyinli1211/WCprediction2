@@ -44,12 +44,14 @@ wcSummaryByYear <- function(v.year, v.team, v.var) {
                 filter(year==v.year, home_team==v.team | away_team==v.team) %>%
                 arrange(desc(date)) %>%
                 filter(row_number() <= 1) %>%
+                mutate(score.for=ifelse(home_team==v.team,home_score,away_score),
+                       score.against=ifelse(away_team==v.team,away_score,home_score),) %>%
                 pull(v.var)
   return(v.result)
   
 }
 
-df.trainExtraction <- function (v.year) {
+df.train.Extraction <- function (v.year) {
   
   v.year <- as.character(v.year)
   v.strat.date <- df.wc.timeframe %>%
@@ -69,3 +71,29 @@ df.trainExtraction <- function (v.year) {
   return(df.result)
 }
 
+df.fifaRanking.Extraction <- function (df, v.year) {
+  
+  v.year <- '1998'
+  
+  v.year <- as.character(v.year)
+  v.url <- df.wc.timeframe %>%
+            filter(year==v.year) %>%
+            pull(url.ranking)
+  v.team <- df.wc.team %>%
+              filter(year==v.year) %>%
+              pull(team)
+  
+  df.extraction <- read_html(v.url) %>%
+                    html_nodes("table") %>%
+                    .[1] %>%
+                    html_table(fill=TRUE) %>%
+                    .[[1]]
+  df.extraction <- df.extraction[,c(2,3)]
+  df.extraction$year <- rep(v.year,dim(df.extraction)[1])
+  colnames(df.extraction) <- c('rank','team','year')
+  
+  df.result <- df %>%
+                bind_rows(df.extraction)
+  
+  return(df.result)
+}
