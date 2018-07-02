@@ -102,8 +102,8 @@ df.wc.team <- df.wc.team %>%
   left_join(df.fifa.ranking, by=c('year','team'))
 
 df.wc <- df.wc %>%
-          left_join(df.fifa.ranking, by=c('year'='year','home_team'='team')) %>%
-          left_join(df.fifa.ranking, by=c('year'='year','away_team'='team'))
+  left_join(df.fifa.ranking, by=c('year'='year','home_team'='team')) %>%
+  left_join(df.fifa.ranking, by=c('year'='year','away_team'='team'))
 colnames(df.wc)[23:24] <- c('home.fifa.rank','away.fifa.rank')
 
 list.train <- list()
@@ -113,28 +113,37 @@ for (i in 1:dim(df.wc.timeframe)[1]) {
 }
 names(list.train) <- df.wc.timeframe$year
 
+df.hypothesis1 <- df.wc %>%
+                    mutate(rank.diff=ifelse(home.fifa.rank < away.fifa.rank, away.fifa.rank-home.fifa.rank,home.fifa.rank-away.fifa.rank),
+                           score.diff=ifelse(home.fifa.rank < away.fifa.rank, home_score-away_score, away_score-home_score)) %>%
+                    select(rank.diff, score.diff)
+
 
 #data visualization- score distribution
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
-          geom_count() +
-          scale_size_area(max_size=5) +
-          scale_y_discrete(name='score.max',limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
-          labs(title='Score distribution of FIFA World Cup \n 1998-2014')
+  geom_count() +
+  scale_size_area(max_size=5) +
+  scale_y_discrete(name='score.max',limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
+  labs(title='Score distribution of FIFA World Cup \n 1998-2014')
 
 plot2 <- ggplot(df.wc, aes(x=score.diff)) + 
-          geom_bar(stat='count', width=1,position='dodge') +
-          scale_x_discrete(limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
-          labs(title='Score difference distribution of FIFA World Cup \n 1998-2014')
+  geom_bar(stat='count', width=1,position='dodge') +
+  scale_x_discrete(limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
+  labs(title='Score difference distribution of FIFA World Cup \n 1998-2014')
 
 plot3 <- ggplot(df.wc, aes(x=score.diff,fill=stage2)) + 
-          geom_bar(stat='count', width=1,position='dodge') +
-          scale_x_discrete(limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
-          labs(title='Score difference distribution of FIFA World Cup \n by stage type 1998-2014')
+  geom_bar(stat='count', width=1,position='dodge') +
+  scale_x_discrete(limits=seq(-max(df.wc$score.max),max(df.wc$score.max),1)) +
+  labs(title='Score difference distribution of FIFA World Cup \n by stage type 1998-2014')
 
 
 plot4 <- ggplot(df.wc, aes(x=reorder(region.str,region.score.diff,mean), y=region.score.diff)) +
-          geom_boxplot() +
-          labs(title='Score difference distribution of FIFA World Cup \n by region 1998-2014') +
-          theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  geom_boxplot() +
+  labs(title='Score difference distribution of FIFA World Cup \n by region 1998-2014') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-grid.arrange(plot1,plot2, plot3, plot4,nrow=2,ncol=2)
+plot5 <- ggplot(df.hypothesis1, aes(x=rank.diff, y=score.diff)) +
+          geom_point() +
+          labs(title='Score difference aginst FIFA score rank on FIFA World Cup games\n by 1998-2014') +
+          scale_y_continuous(breaks=seq(-5,8,1)) +
+          scale_x_continuous(breaks=seq(0,100,10))
