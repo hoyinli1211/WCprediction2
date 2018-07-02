@@ -30,7 +30,7 @@ df.fifaRanking.Extraction <- function (v.year, v.team) {
                     mutate(year=as.character(year),
                            team=as.character(team),
                            rank=as.integer(rank))
-  str(df.extraction)
+  #str(df.extraction)
   return(df.extraction)
 }
 
