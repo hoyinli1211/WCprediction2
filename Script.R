@@ -75,6 +75,11 @@ df.wc.timeframe <- df.wc %>%
                     mutate(start.date.train=lag(start.date.game)+1,
                            end.date.train=start.date.game-1)
 df.wc.timeframe$start.date.train[1] <- as.Date('1994-07-18')
+df.wc.timeframe$url.ranking <- c('https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank=50/index.html',
+                                 'https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank=97/index.html',
+                                 'https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank=144/index.html',
+                                 'https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank=191/index.html',
+                                 'https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank=239/index.html')
 
 df.wc.team.1 <- df.wc %>%
                   filter(stage1=='Group stage 1') %>%
