@@ -47,7 +47,7 @@ for (i in 1:dim(df.wc.timeframe)[1]) {
 df.fifa.ranking <- df.fifa.ranking %>%         
   mutate(team=ifelse(team=='United Kingdom of Great Britain and Northern Ireland','England',
                     ifelse(team=='Russian Federation','Russia',
-                           ifelse(team %in% c('Iran (Islamic Republic of)','Iran IR'),'Iran',
+                           ifelse(team %in% c('Iran (Islamic Republic of)','IR Iran'),'Iran',
                                   ifelse(team=='Czechia','Czech Republic',
                                          ifelse(team=="Côte d'Ivoire",'Ivory Coast',
                                                 ifelse(team=='Bosnia and Herzegovina','Bosnia-Herzegovina',
