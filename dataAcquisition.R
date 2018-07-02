@@ -29,7 +29,7 @@ df.fifaRanking.Extraction <- function (v.year, v.team) {
   df.extraction <- df.extraction[c(3,2,1)] %>%
                     mutate(year=as.character(year),
                            team=as.character(team),
-                           fifa.rank.beforeWC=as.integer(rank.beforeWC))
+                           fifa.rank.beforeWC=as.integer(fifa.rank.beforeWC))
   #str(df.extraction)
   return(df.extraction)
 }
