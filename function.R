@@ -32,3 +32,19 @@ regionString <- function(v.1.region,v.2.region,v.1.score,v.2.score,v.ind) {
   
   return(v.output)
 }
+
+
+wcSummaryByYear <- function(v.year, v.team, v.var) {
+  
+  v.year <- as.character(v.year)
+  v.team <- as.character(v.team)
+  v.var <- as.character(v.var)
+  
+  v.result <- df.wc %>%
+                filter(year==v.year, home_team==v.team | away_team==v.team) %>%
+                arrange(desc(date)) %>%
+                filter(row_number() <= 1) %>%
+                pull(v.var)
+  return(v.result)
+  
+}
