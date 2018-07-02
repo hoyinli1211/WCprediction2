@@ -8,9 +8,16 @@ df.cty2 <- df.cty2 %>%
   mutate(cty.cdInt = str_pad(df.cty2$cty.cdInt,3,pad="0"),
          cty=ifelse(cty=='United Kingdom of Great Britain and Northern Ireland','England',
                     ifelse(cty=='Russian Federation','Russia',
-                           ifelse(cty=='Iran (Islamic Republic of)','Iran',
+                           ifelse(cty %in% c('Iran (Islamic Republic of)','Iran IR'),'Iran',
                                   ifelse(cty=='Czechia','Czech Republic',
                                          ifelse(cty=="Côte d'Ivoire",'Ivory Coast',
-                                                ifelse(cty=='Bosnia and Herzegovina','Bosnia-Herzegovina',cty)))))),
+                                                ifelse(cty=='Bosnia and Herzegovina','Bosnia-Herzegovina',
+                                                       ifelse(cty='China PR','China',cty)
+                                                )
+                                         )
+                                  )
+                           )
+                     )
+               ),
          region=as.character(region)
   )
