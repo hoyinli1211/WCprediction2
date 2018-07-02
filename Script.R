@@ -1,6 +1,6 @@
 #library
 library(dplyr)
-library(lubirdate)
+library(lubridate)
 library(ggplot2)
 library(gridExtra)
 
