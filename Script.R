@@ -68,9 +68,17 @@ df.wc <- df.wc %>%
 
 df.wc <- data.frame(df.wc)
 
+df.wc.timeframe <- df.wc %>%
+                    group_by(year) %>%
+                    summarise(start.date.game=min(date),
+                              end.date.game=max(date)) %>%
+                    mutate(start.date.train=lag(start.date.game)+1,
+                           end.date.train=start.date.game-1)
+df.wc.timeframe$start.date.train[1] <- as.Date('1994-07-18')
+
 df.wc.team.1 <- df.wc %>%
-                filter(stage1=='Group stage 1') %>%
-                select(year, team=home_team)
+                  filter(stage1=='Group stage 1') %>%
+                  select(year, team=home_team)
 df.wc.team.2 <- df.wc %>%
                   filter(stage1=='Group stage 1') %>%
                   select(year, team=away_team)
@@ -103,4 +111,3 @@ plot4 <- ggplot(df.wc, aes(x=reorder(region.str,region.score.diff,mean), y=regio
           theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 grid.arrange(plot1,plot2, plot3, plot4,nrow=2,ncol=2)
-
