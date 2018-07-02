@@ -30,7 +30,7 @@ df.fifaRanking.Extraction <- function (v.year, v.team) {
                     mutate(year=as.character(year),
                            team=as.character(team),
                            rank=as.integer(rank))
-  str(df.extraction)
+  #str(df.extraction)
   return(df.extraction)
 }
 
@@ -52,7 +52,11 @@ df.fifa.ranking <- df.fifa.ranking %>%
                                          ifelse(team=="Côte d'Ivoire",'Ivory Coast',
                                                 ifelse(team=='Bosnia and Herzegovina','Bosnia-Herzegovina',
                                                        ifelse(team=='China PR','China',
-                                                              ifelse(team=='Korea Republic','Republic of Korea',team)
+                                                              ifelse(team=='Korea Republic','Republic of Korea',
+                                                                     ifelse(team=='Republic of Ireland','Ireland',
+                                                                          ifelse(team=='USA','United States of America',team)
+                                                                     )
+                                                              )
                                                        )
                                                 )
                                          )
