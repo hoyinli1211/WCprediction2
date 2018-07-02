@@ -10,10 +10,6 @@ rm(list=ls())
 url.function <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/function.R'
 source(url.function)
 
-#data.acquisition import
-url.dataAcquisition <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/dataAcquisition.R'
-source(url.dataAcquisition)
-
 ######################################
 #Data import and manipulation
 ######################################
@@ -94,8 +90,12 @@ df.wc.team <- df.wc.team.1 %>%
                 bind_rows(df.wc.team.2) %>%
                 rowwise() %>%
                 mutate(stage=wcSummaryByYear(year,team,'stage1'))
-
 df.wc.team <- data.frame(df.wc.team)
+
+#data.acquisition import
+url.dataAcquisition <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/dataAcquisition.R'
+source(url.dataAcquisition)
+
 df.wc.team <- df.wc.team %>%
                 left_join(df.fifa.ranking, by=c('year','team'))
       
