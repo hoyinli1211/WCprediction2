@@ -43,8 +43,10 @@ df <- df %>%
         left_join(df.cty2[,c(1,9)], by=c('away_team'='cty'))
 colnames(df)[17] <- 'away.region'
 df <- df %>%
-        mutate(home.region=ifelse(home_team=='Scotland','Europe',home.region),
-               away.region=ifelse(away_team=='Scotland','Europe',away.region),
+        mutate(home.region=ifelse(home_team=='Scotland','Europe',
+                                  ifelse(home_team=='Korea DPR', 'Asia', home.region)),
+               away.region=ifelse(away_team=='Scotland','Europe',
+                                 ifelse(away_team=='Korea DPR', 'Asia', away.region))
         )
 
 #stage of world cup
