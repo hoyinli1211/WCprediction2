@@ -24,19 +24,19 @@ df.fifaRanking.Extraction <- function (v.year, v.team) {
     .[[1]]
   df.extraction <- df.extraction[,c(2,3)]
   df.extraction$year <- rep(v.year,dim(df.extraction)[1])
-  colnames(df.extraction) <- c('rank.beforeWC','team','year')
+  colnames(df.extraction) <- c('fifa.rank.beforeWC','team','year')
   
   df.extraction <- df.extraction[c(3,2,1)] %>%
                     mutate(year=as.character(year),
                            team=as.character(team),
-                           rank.beforeWC=as.integer(rank.beforeWC))
+                           fifa.rank.beforeWC=as.integer(rank.beforeWC))
   #str(df.extraction)
   return(df.extraction)
 }
 
 df.fifa.ranking <- data.frame(year=character(),
                               team=character(),
-                              rank.beforeWC=integer())
+                              fifa.rank.beforeWC=integer())
 
 for (i in 1:dim(df.wc.timeframe)[1]) {
   v.year <- df.wc.timeframe$year[i]
