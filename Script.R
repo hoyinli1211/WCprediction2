@@ -10,6 +10,10 @@ rm(list=ls())
 url.function <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/function.R'
 source(url.function)
 
+#data.acquisition import
+url.dataAcquisition <- 'https://raw.githubusercontent.com/hoyinli1211/WCprediction2/master/dataAcquisition.R'
+source(url.dataAcquisition)
+
 ######################################
 #Data import and manipulation
 ######################################
@@ -81,6 +85,7 @@ df.wc.timeframe$url.ranking <- c('https://www.fifa.com/fifa-world-ranking/rankin
                                  'https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank=191/index.html',
                                  'https://www.fifa.com/fifa-world-ranking/ranking-table/men/rank=239/index.html')
 
+
 df.wc.team.1 <- df.wc %>%
                   filter(stage1=='Group stage 1') %>%
                   select(year, team=home_team)
@@ -92,12 +97,19 @@ df.wc.team <- df.wc.team.1 %>%
                 rowwise() %>%
                 mutate(stage=wcSummaryByYear(year,team,'stage1'))
 
+df.wc.team <- data.frame(df.wc.team)
+df.wc.team <- df.wc.team %>%
+                left_join(df.fifa.ranking, by=c('year','team'))
+      
+
 list.train <- list()
 for (i in 1:dim(df.wc.timeframe)[1]) {
   v.year <- df.wc.timeframe$year[i]
-  list.train[[i]] <- df.trainExtraction(v.year)
+  list.train[[i]] <- df.train.Extraction(v.year)
 }
 names(list.train) <- df.wc.timeframe$year
+
+
 
 #data visualization- score distribution
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
@@ -123,3 +135,4 @@ plot4 <- ggplot(df.wc, aes(x=reorder(region.str,region.score.diff,mean), y=regio
           theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 grid.arrange(plot1,plot2, plot3, plot4,nrow=2,ncol=2)
+
