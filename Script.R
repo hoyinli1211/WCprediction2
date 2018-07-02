@@ -32,7 +32,7 @@ df <- df %>%
                home_team=ifelse(home_team == 'Korea Republic' ,'Republic of Korea',
                                 ifelse(home_team=='USA','United States of America',home_team)),
                away_team=ifelse(away_team == 'Korea Republic','Republic of Korea',
-                                ifelse(away_team=='USA','United States of America',Korea,away_team))           
+                                ifelse(away_team=='USA','United States of America',away_team))           
         ) %>%
         filter(date > '1994-07-17')    # as this is last of of 1994 world cup
 
