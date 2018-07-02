@@ -44,6 +44,21 @@ for (i in 1:dim(df.wc.timeframe)[1]) {
                       bind_rows(df.fifaRanking.Extraction(v.year))
 }
 
-df.fifa.ranking <- df.fifa.ranking %>%
-                    mutate(team=ifelse(team == 'Korea Republic' ,'Republic of Korea',team))
+df.fifa.ranking <- df.fifa.ranking %>%         
+  mutate(team=ifelse(team=='United Kingdom of Great Britain and Northern Ireland','England',
+                    ifelse(team=='Russian Federation','Russia',
+                           ifelse(team %in% c('Iran (Islamic Republic of)','Iran IR'),'Iran',
+                                  ifelse(team=='Czechia','Czech Republic',
+                                         ifelse(team=="Côte d'Ivoire",'Ivory Coast',
+                                                ifelse(team=='Bosnia and Herzegovina','Bosnia-Herzegovina',
+                                                       ifelse(team=='China PR','China',
+                                                              ifelse(team=='Korea Republic','Republic of Korea',team)
+                                                       )
+                                                )
+                                         )
+                                  )
+                           )
+                    )
+              )
+         )
                            
