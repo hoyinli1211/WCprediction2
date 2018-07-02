@@ -141,32 +141,3 @@ df.train.Extraction <- function (v.year) {
   
   return(df.result)
 }
-
-df.fifaRanking.Extraction <- function (v.year, v.team) {
-  
-  v.year <- '1998'
-  
-  v.year <- as.character(v.year)
-  v.url <- df.wc.timeframe %>%
-            filter(year==v.year) %>%
-            pull(url.ranking)
-  v.team <- df.wc.team %>%
-              filter(year==v.year) %>%
-              pull(team)
-  
-  df.extraction <- read_html(v.url) %>%
-                    html_nodes("table") %>%
-                    .[1] %>%
-                    html_table(fill=TRUE) %>%
-                    .[[1]]
-  df.extraction <- df.extraction[,c(2,3)]
-  df.extraction$year <- rep(v.year,dim(df.extraction)[1])
-  colnames(df.extraction) <- c('rank','team','year')
-  
-  v.rank <- df.extraction %>%
-              filter(year==v.year,team==v.team) %>%
-              pull(rank)  
-              
-  return(v.rank)
-}
-
