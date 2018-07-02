@@ -75,7 +75,9 @@ df.wc.team.2 <- df.wc %>%
                   filter(stage1=='Group stage 1') %>%
                   select(year, team=away_team)
 df.wc.team <- df.wc.team.1 %>%
-                bind_rows(df.wc.team.2)
+                bind_rows(df.wc.team.2) %>%
+                rowwise() %>%
+                mutate(stage=wcSummaryByYear(year,team,'stage1'))
 
 #data visualization- score distribution
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
