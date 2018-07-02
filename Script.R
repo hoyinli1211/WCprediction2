@@ -87,6 +87,13 @@ df.wc.team <- df.wc.team.1 %>%
                 rowwise() %>%
                 mutate(stage=wcSummaryByYear(year,team,'stage1'))
 
+list.train <- list()
+for (i in 1:dim(df.wc.timeframe)[1]) {
+  v.year <- df.wc.timeframe$year[i]
+  list.train[[i]] <- df.trainExtraction(v.year)
+}
+
+
 #data visualization- score distribution
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
           geom_count() +
