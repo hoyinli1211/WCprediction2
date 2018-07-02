@@ -30,7 +30,7 @@ df.fifaRanking.Extraction <- function (v.year, v.team) {
                     mutate(year=as.character(year),
                            team=as.character(team),
                            rank=as.integer(rank))
-  #str(df.extraction)
+  str(df.extraction)
   return(df.extraction)
 }
 
@@ -44,3 +44,6 @@ for (i in 1:dim(df.wc.timeframe)[1]) {
                       bind_rows(df.fifaRanking.Extraction(v.year))
 }
 
+df.fifa.ranking <- df.fifa.ranking %>%
+                    mutate(team=ifelse(team == 'Korea Republic' ,'Republic of Korea',team)
+                           
