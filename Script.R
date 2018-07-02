@@ -29,12 +29,10 @@ df <- df %>%
                score=paste0(score.max,'-',score.min),
                score.diff=(home_score-away_score),
                score.diff.abs=abs(score.max-score.min),
-               home_team=ifelse(home_team == 'Korea Republic' | home_team== 'Korea DPR','Republic of Korea',
-                                ifelse(home_team=='USA','United States of America',
-                                       ifelse(home_team=='Republic of Korea',Korea,home_team))),
-               away_team=ifelse(away_team == 'Korea Republic' | away_team== 'Korea DPR','Republic of Korea',
-                                ifelse(away_team=='USA','United States of America',
-                                       ifelse(away_team=='Republic of Korea',Korea,away_team)))               
+               home_team=ifelse(home_team == 'Korea Republic' ,'Republic of Korea',
+                                ifelse(home_team=='USA','United States of America',home_team)),
+               away_team=ifelse(away_team == 'Korea Republic','Republic of Korea',
+                                ifelse(away_team=='USA','United States of America',Korea,away_team))           
         ) %>%
         filter(date > '1994-07-17')    # as this is last of of 1994 world cup
 
