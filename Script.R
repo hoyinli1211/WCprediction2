@@ -114,9 +114,13 @@ for (i in 1:dim(df.wc.timeframe)[1]) {
 names(list.train) <- df.wc.timeframe$year
 
 df.hypothesis1 <- df.wc %>%
-                    mutate(rank.diff=ifelse(home.fifa.rank < away.fifa.rank, away.fifa.rank-home.fifa.rank,home.fifa.rank-away.fifa.rank),
-                           score.diff=ifelse(home.fifa.rank < away.fifa.rank, home_score-away_score, away_score-home_score)) %>%
-                    select(rank.diff, score.diff)
+  mutate(rank.diff=ifelse(home.fifa.rank < away.fifa.rank, away.fifa.rank-home.fifa.rank,home.fifa.rank-away.fifa.rank),
+         score.diff=ifelse(home.fifa.rank < away.fifa.rank, home_score-away_score, away_score-home_score)) %>%
+  select(rank.diff, score.diff)
+
+# pearson correlation test
+corr <- cor.test(df.hypothesis1$rank.diff, df.hypothesis1$score.diff, method='pearson')
+corr
 
 
 #data visualization- score distribution
@@ -143,7 +147,11 @@ plot4 <- ggplot(df.wc, aes(x=reorder(region.str,region.score.diff,mean), y=regio
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 plot5 <- ggplot(df.hypothesis1, aes(x=rank.diff, y=score.diff)) +
-          geom_point() +
-          labs(title='Score difference aginst FIFA score rank on FIFA World Cup games\n by 1998-2014') +
-          scale_y_continuous(breaks=seq(-5,8,1)) +
-          scale_x_continuous(breaks=seq(0,100,10))
+  geom_point() +
+  labs(title='Score difference aginst FIFA score rank difference \n on FIFA World Cup gamrd (1998-2014)') +
+  scale_y_continuous(breaks=seq(-5,8,1)) +
+  scale_x_continuous(breaks=seq(0,100,10))
+
+grid.arrange(plot1,plot2, nrow=2,ncol=1)
+grid.arrange(plot3,plot4, nrow=2,ncol=1)
+grid.arrange(plot5, nrow=2,ncol=1)
