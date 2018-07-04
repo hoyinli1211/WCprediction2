@@ -122,6 +122,22 @@ df.hypothesis1 <- df.wc %>%
 corr <- cor.test(df.hypothesis1$rank.diff, df.hypothesis1$score.diff, method='pearson')
 corr
 
+# poisson regression
+m1.a <- glm(home_score ~ home.fifa.rank + away.fifa.rank, family= 'poisson', data=df.wc)
+summary(m1.a)
+m1.b <- glm(away_score ~ home.fifa.rank + away.fifa.rank, family= 'poisson', data=df.wc)
+summary(m1.b)
+
+lamda1 <- exp(coef(m1.a)[1] + coef(m1.a)[2]*2 + coef(m1.a)[3]*15)
+lamda2 <- exp(coef(m1.b)[1] + coef(m1.b)[2]*15 + coef(m1.b)[3]*2)
+
+v.simulation <- paste(rpois(10000,lamda1),rpois(10000,lamda2),sep="-")
+df.simulation <- data.frame(result=v.simulation)
+df.simulation.summary <- df.simulation %>%
+                          group_by(result) %>%
+                          summarise(n=n(),ratio=n/10000) %>%
+                          arrange(desc(ratio))
+View(df.simulation.summary)
 
 #data visualization- score distribution
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
