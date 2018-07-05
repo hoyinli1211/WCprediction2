@@ -116,7 +116,7 @@ wcSummaryByYear <- function(v.year, v.team, v.var) {
                 arrange(desc(date)) %>%
                 filter(row_number() <= 1) %>%
                 mutate(score.for=ifelse(home_team==v.team,home_score,away_score),
-                       score.against=ifelse(away_team==v.team,away_score,home_score),) %>%
+                       score.against=ifelse(away_team==v.team,away_score,home_score)) %>%
                 pull(v.var)
   return(v.result)
   
@@ -140,4 +140,19 @@ df.train.Extraction <- function (v.year) {
                 filter(home_team %in% v.team | away_team %in% v.team, year==v.year)
   
   return(df.result)
+}
+
+wcPerformance <- function(v.year, v.team, v.id, v.var) {
+  
+  v.result <- df.wc %>%
+                filter(year==v.year, home_team==v.team | away_team==v.team, id < v.id) %>%
+                mutate(score.for=ifelse(home_team==v.team,home_score,away_score),
+                       score.against=ifelse(away_team==v.team,away_score,home_score)) %>%
+                group_by(year) %>%
+                summarise(attack=sum(score.for),
+                          defense=sum(score.against)) %>%
+                pull(v.var)
+  
+  return(v.result)
+  
 }
