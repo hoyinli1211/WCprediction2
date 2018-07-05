@@ -113,6 +113,11 @@ for (i in 1:dim(df.wc.timeframe)[1]) {
 }
 names(list.train) <- df.wc.timeframe$year
 
+
+
+########################################
+#correlation of rank and score difference
+########################################
 df.hypothesis1 <- df.wc %>%
   mutate(rank.diff=ifelse(home.fifa.rank < away.fifa.rank, away.fifa.rank-home.fifa.rank,home.fifa.rank-away.fifa.rank),
          score.diff=ifelse(home.fifa.rank < away.fifa.rank, home_score-away_score, away_score-home_score)) %>%
@@ -122,24 +127,71 @@ df.hypothesis1 <- df.wc %>%
 corr <- cor.test(df.hypothesis1$rank.diff, df.hypothesis1$score.diff, method='pearson')
 corr
 
+
+########################################
+#simple poisson regression on fifa rank between teams for score prediction
+########################################
 # poisson regression
 m1.a <- glm(home_score ~ home.fifa.rank + away.fifa.rank, family= 'poisson', data=df.wc)
 summary(m1.a)
 m1.b <- glm(away_score ~ home.fifa.rank + away.fifa.rank, family= 'poisson', data=df.wc)
 summary(m1.b)
 
-lamda1 <- exp(coef(m1.a)[1] + coef(m1.a)[2]*2 + coef(m1.a)[3]*15)
-lamda2 <- exp(coef(m1.b)[1] + coef(m1.b)[2]*15 + coef(m1.b)[3]*2)
+sim.home.fifa.rank <- 7
+sim.away.fifa.rank <- 14
+
+lamda1 <- exp(coef(m1.a)[1] + coef(m1.a)[2]*sim.home.fifa.rank + coef(m1.a)[3]*sim.away.fifa.rank)
+lamda2 <- exp(coef(m1.b)[1] + coef(m1.b)[2]*sim.away.fifa.rank + coef(m1.b)[3]*sim.home.fifa.rank)
 
 v.simulation <- paste(rpois(10000,lamda1),rpois(10000,lamda2),sep="-")
 df.simulation <- data.frame(result=v.simulation)
 df.simulation.summary <- df.simulation %>%
-                          group_by(result) %>%
-                          summarise(n=n(),ratio=n/10000) %>%
-                          arrange(desc(ratio))
+  group_by(result) %>%
+  summarise(n=n(),ratio=n/10000) %>%
+  arrange(desc(ratio))
 View(df.simulation.summary)
 
+
+########################################
+#simple poisson regression on fifa rank and wc performance in round of 16 and group
+########################################
+
+df.wc.quarter <- df.wc %>%
+                  filter(stage1=='Quarter-finals') %>%
+                  rowwise() %>%
+                  mutate(home.attack=wcPerformance(year,home_team, id, 'attack'),
+                         home.defense=wcPerformance(year,home_team, id, 'defense'),
+                         away.attack=wcPerformance(year,away_team, id, 'attack'),
+                         away.defense=wcPerformance(year,away_team, id, 'defense'))
+
+# poisson regression
+m2.a <- glm(home_score ~ home.fifa.rank + away.fifa.rank + home.attack + away.defense, family= 'poisson', data=df.wc.quarter)
+summary(m2.a)
+m2.b <- glm(away_score ~ home.fifa.rank + away.fifa.rank + home.defense + away.attack, family= 'poisson', data=df.wc.quarter)
+summary(m2.b)
+
+sim.home.fifa.rank <- 7
+sim.away.fifa.rank <- 14
+sim.home.attack <- 6
+sim.home.defense <- 4
+sim.away.attack <- 6
+sim.away.defense <- 1
+
+lamda1 <- exp(coef(m2.a)[1] + coef(m2.a)[2]*sim.home.fifa.rank + coef(m2.a)[3]*sim.away.fifa.rank + coef(m2.a)[4]*sim.home.attack + coef(m2.a)[5]*sim.away.defense)
+lamda2 <- exp(coef(m2.b)[1] + coef(m2.b)[2]*sim.away.fifa.rank + coef(m2.b)[3]*sim.home.fifa.rank + coef(m2.b)[4]*sim.away.attack + coef(m2.b)[5]*sim.home.defense)
+
+v.simulation <- paste(rpois(10000,lamda1),rpois(10000,lamda2),sep="-")
+df.simulation <- data.frame(result=v.simulation)
+df.simulation.summary <- df.simulation %>%
+  group_by(result) %>%
+  summarise(n=n(),ratio=n/10000) %>%
+  arrange(desc(ratio))
+View(df.simulation.summary)
+
+########################################
 #data visualization- score distribution
+########################################
+
 plot1 <- ggplot(df.wc, aes(score.min,score.max)) + 
   geom_count() +
   scale_size_area(max_size=5) +
